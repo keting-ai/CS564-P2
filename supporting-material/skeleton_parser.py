@@ -31,27 +31,35 @@ from re import sub
 columnSeparator = "|"
 
 # Dictionary of months used for date transformation
-MONTHS = {'Jan':'01','Feb':'02','Mar':'03','Apr':'04','May':'05','Jun':'06',\
-        'Jul':'07','Aug':'08','Sep':'09','Oct':'10','Nov':'11','Dec':'12'}
+MONTHS = {'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06',
+          'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'}
 
 """
 Returns true if a file ends in .json
 """
+
+
 def isJson(f):
     return len(f) > 5 and f[-5:] == '.json'
+
 
 """
 Converts month to a number, e.g. 'Dec' to '12'
 """
+
+
 def transformMonth(mon):
     if mon in MONTHS:
         return MONTHS[mon]
     else:
         return mon
 
+
 """
 Transforms a timestamp from Mon-DD-YY HH:MM:SS to YYYY-MM-DD HH:MM:SS
 """
+
+
 def transformDttm(dttm):
     dttm = dttm.strip().split(' ')
     dt = dttm[0].split('-')
@@ -59,23 +67,29 @@ def transformDttm(dttm):
     date += transformMonth(dt[0]) + '-' + dt[1]
     return date + ' ' + dttm[1]
 
+
 """
 Transform a dollar value amount from a string like $3,453.23 to XXXXX.xx
 """
+
 
 def transformDollar(money):
     if money == None or len(money) == 0:
         return money
     return sub(r'[^\d.]', '', money)
 
+
 """
 Parses a single json file. Currently, there's a loop that iterates over each
 item in the data set. Your job is to extend this functionality to create all
 of the necessary SQL tables for your database.
 """
+
+
 def parseJson(json_file):
     with open(json_file, 'r') as f:
-        items = loads(f.read())['Items'] # creates a Python dictionary of Items for the supplied json file
+        # creates a Python dictionary of Items for the supplied json file
+        items = loads(f.read())['Items']
         for item in items:
             """
             TODO: traverse the items dictionary to extract information from the
@@ -84,10 +98,13 @@ def parseJson(json_file):
             """
             pass
 
+
 """
 Loops through each json files provided on the command line and passes each file
 to the parser
 """
+
+
 def main(argv):
     if len(argv) < 2:
         print >> sys.stderr, 'Usage: python skeleton_json_parser.py <path to json files>'
@@ -96,7 +113,8 @@ def main(argv):
     for f in argv[1:]:
         if isJson(f):
             parseJson(f)
-            print "Success parsing " + f
+            print("Success parsing " + f)
+
 
 if __name__ == '__main__':
     main(sys.argv)
